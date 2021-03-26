@@ -3,8 +3,8 @@
 #Region "各種設定"
     Private _X As Integer
     Private _Y As Integer
-    Public _screenBMP As Bitmap
-    Public _selectBMP As Bitmap
+    Private _screenBMP As Bitmap
+    Private _selectBMP As Bitmap
 
     Public WriteOnly Property X() As Integer
         Set(value As Integer)
@@ -46,8 +46,8 @@
     End Sub
 
     Public Function MakeRect(ByVal X As Integer, ByVal Y As Integer) As Rectangle
-        Dim tmpX As Integer = Me._X
-        Dim tmpY As Integer = Me._Y
+        Dim tmpX As Integer = _X
+        Dim tmpY As Integer = _Y
 
         X = FixZero(FixX(X))
         Y = FixZero(FixY(Y))
