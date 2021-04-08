@@ -1,10 +1,13 @@
-﻿Public Class Form1
+﻿Imports System.ComponentModel
+
+Public Class Form1
 
 #Region "宣告變數"
     Private s As New Screen
     Private HotKey As New CHotKey(Me)
     Private imageFileName As String
     Private imageFormat As Imaging.ImageFormat
+    'Private screenBitMAP As Bitmap
 
     Private Enum modKey
         WM_HOTKEY = &H312
@@ -63,7 +66,7 @@
             Using g As Graphics = PictureBox1.CreateGraphics
                 Using p As New Pen(Color.Black, 1)
                     p.DashStyle = Drawing2D.DashStyle.Dash
-                    g.DrawImage(s.screenBMP, 0, 0, s.screenBMP.Width, s.screenBMP.Height)
+                    g.DrawImage(s.ScreenBMP, 0, 0, s.ScreenBMP.Width, s.ScreenBMP.Height)
                     g.DrawRectangle(p, s.MakeRect(e.X, e.Y))
                 End Using
             End Using
@@ -72,11 +75,11 @@
 
     Private Sub PictureBox1_MouseUp(sender As Object, e As MouseEventArgs) Handles PictureBox1.MouseUp
         Dim srcRect As Rectangle = s.MakeRect(e.X, e.Y)
-        s.selectBMP = New Bitmap(srcRect.Width, srcRect.Height)
+        s.SelectBMP = New Bitmap(srcRect.Width, srcRect.Height)
 
-        Using g As Graphics = Graphics.FromImage(s.selectBMP)
-            g.DrawImage(s.screenBMP, 0, 0, srcRect, GraphicsUnit.Pixel)
-            PictureBox1.Image = s.selectBMP
+        Using g As Graphics = Graphics.FromImage(s.SelectBMP)
+            g.DrawImage(s.ScreenBMP, 0, 0, srcRect, GraphicsUnit.Pixel)
+            PictureBox1.Image = s.SelectBMP
         End Using
 
         SaveFile()
@@ -129,25 +132,22 @@
     ''' <summary>
     ''' 截取螢幕畫面
     ''' </summary>
-    ''' <returns>傳回 Bitmap 格式</returns>
-    Private Function GetScreen() As Bitmap
+    Private Sub GetScreen()
         Dim screenWidth As Integer = My.Computer.Screen.Bounds.Width
         Dim ScreenHeight As Integer = My.Computer.Screen.Bounds.Height
-        Dim screenBitMAP As New Bitmap(screenWidth, ScreenHeight)
 
-        Using g As Graphics = Graphics.FromImage(screenBitMAP)
+        s.ScreenBMP = New Bitmap(screenWidth, ScreenHeight)
+        Using g As Graphics = Graphics.FromImage(s.ScreenBMP)
             g.CopyFromScreen(New Point(0, 0), New Point(0, 0), New Size(screenWidth, ScreenHeight))
         End Using
-
-        Return screenBitMAP
-    End Function
+    End Sub
 
     ''' <summary>
     ''' 截取螢幕畫面後，設定為 PictureBox 的圖片
     ''' </summary>
     Private Sub ScreenCapture()
-        s.screenBMP = New Bitmap(GetScreen)
-        PictureBox1.Image = s.screenBMP
+        GetScreen()
+        PictureBox1.Image = s.ScreenBMP
         PictureBox1.Visible = True
         PictureBox1.Enabled = True
     End Sub
@@ -162,8 +162,8 @@
 
     Private Sub SaveFile()
         If My.Computer.FileSystem.DirectoryExists(TextBox1.Text) Then
-            s.selectBMP.Save(CheckChar(TextBox1.Text) & Format(Now, "yyyyMMdd-HH.mm.ss") & imageFileName, imageFormat)
+            s.SelectBMP.Save(CheckChar(TextBox1.Text) & Format(Now, "yyyyMMdd-HH.mm.ss") & imageFileName, imageFormat)
         End If
-        My.Computer.Clipboard.SetImage(s.selectBMP)
+        My.Computer.Clipboard.SetImage(s.SelectBMP)
     End Sub
 End Class

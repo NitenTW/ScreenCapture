@@ -23,6 +23,9 @@
             Return _screenBMP
         End Get
         Set(value As Bitmap)
+            If Not IsNothing(_screenBMP) Then
+                _screenBMP.Dispose()
+            End If
             _screenBMP = value
         End Set
     End Property
