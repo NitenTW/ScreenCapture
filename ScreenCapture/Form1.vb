@@ -1,13 +1,10 @@
-﻿Imports System.ComponentModel
-
-Public Class Form1
+﻿Public Class Form1
 
 #Region "宣告變數"
     Private s As New Screen
     Private HotKey As New CHotKey(Me)
     Private imageFileName As String
     Private imageFormat As Imaging.ImageFormat
-    'Private screenBitMAP As Bitmap
 
     Private Enum modKey
         WM_HOTKEY = &H312
